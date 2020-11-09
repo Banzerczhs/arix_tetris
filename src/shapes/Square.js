@@ -7,8 +7,9 @@ class Square extends Shape{
 
     draw(ctx){
         ctx.fillStyle=this.color;
-        ctx.strokeStyle="#fff";
-        ctx.rect(this.x,this.y,this.w,this.h);
+        ctx.strokeStyle="red";
+        console.log(this.w,this.h);
+        ctx.rect(this.x,this.y,this.w-2,this.h-2);
         ctx.fill();
         ctx.stroke();
     }

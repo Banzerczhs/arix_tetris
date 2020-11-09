@@ -1,3 +1,5 @@
+const GAME_CONFIG=require('../config/config');
+
 class Shape{
     constructor({color,name,deg,x,y,w,h}){
          this.color=color||"yellow";
@@ -8,6 +10,15 @@ class Shape{
          this.w=w||0;
          this.h=h||0;
     }
+
+    collision(){
+        if(this.y>global.canvas.height-this.h){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     draw(){
         
     }

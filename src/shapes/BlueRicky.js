@@ -12,10 +12,10 @@ class BlueRicky extends Shape{
     }
     
     initShape(){
-        this.height=2*this.unitSize;
-        this.width=3*this.unitSize;
-        this.x=Tools.randomNum(0,GAME_CONFIG.ctxWidth-this.width);
-        this.y=0-this.height;
+        this.h=2*this.unitSize;
+        this.w=3*this.unitSize;
+        this.x=Tools.randomNum(0,GAME_CONFIG.ctxWidth-this.w);
+        this.y=0-this.h;
         let widthX=this.x;
         let heightY=this.y;
         let square_info=this.computed(widthX,heightY);
@@ -37,7 +37,7 @@ class BlueRicky extends Shape{
     computed(widthX,heightY){
         let square_info=[{
             x : widthX,
-            y : heightY+=this.unitSize
+            y : heightY
         },{
             x : widthX,
             y : heightY+=this.unitSize
@@ -56,6 +56,10 @@ class BlueRicky extends Shape{
         this.x=x;
         this.y=y;
         this.deg=deg;
+        let status=this.collision();
+        if(status){
+            this.y=global.canvas.height-this.h;
+        }
         let newsquare_info=this.computed(this.x,this.y);
         this.shapeObject.forEach((shape,index)=>{
             shape.x=newsquare_info[index].x;
@@ -68,6 +72,7 @@ class BlueRicky extends Shape{
         this.shapeObject.forEach(shape=>{
             shape.draw(ctx);
         });
+        ctx.closePath();
     }
 }
 

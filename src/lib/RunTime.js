@@ -27,13 +27,10 @@ class Runtime{
         });
     }
     update(){
-        this.ctx.clearRect(0,0,GAME_CONFIG.ctxWidth,GAME_CONFIG.ctxHeight);
+        this.ctx.clearRect(0,0,GAME_CONFIG.ctxWidth,GAME_CONFIG.winHeight);
         shapeMange.generate();     //每过一秒生成一个形状
         dataMange.shapeList.forEach(shape=>{
-            if(shape.name=="BlueRicky"){
-                console.log(shape);
-                shape.update({x : shape.x,y:shape.y+=GAME_CONFIG.unitSize,deg:0});
-            }
+            shape.update({x : shape.x,y:shape.y+=GAME_CONFIG.unitSize,deg:0});
         });
     }
     bindEvent(){
