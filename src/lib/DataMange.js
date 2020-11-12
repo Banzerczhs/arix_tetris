@@ -20,12 +20,12 @@ class DataMange{
     init(ctx,canvas){
         this.ctx=ctx;
         this.canvas=canvas;
+        this.rows=this.canvas.height/GAME_CONFIG.unitSize;
+        this.cols=this.canvas.width/GAME_CONFIG.unitSize;
         this.initDynamicMap();
     }
 
     initDynamicMap(){
-        this.rows=this.canvas.height/GAME_CONFIG.unitSize;
-        this.cols=this.canvas.width/GAME_CONFIG.unitSize;
         for(let i=0;i<this.rows;i++){
             for(let j=0;j<this.cols;j++){
                 this.dynamicMap[i*this.cols+j]=0;

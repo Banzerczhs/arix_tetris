@@ -15,6 +15,8 @@ class Shape{
         this.squareList=[];
         this.status='start';
         this.downStop=false;
+        this.leftStop=false;
+        this.rightStop=false;
     }
 
     shapeFactory(Square){
@@ -42,7 +44,6 @@ class Shape{
             let col=square.x/GAME_CONFIG.unitSize;
             
             let pos=row*dataMange.cols+col;
-            console.log(dataMange.dynamicMap);
             if(method=="Left"&&col!==0&&dataMange.dynamicMap[pos-1]==1){
                 collisionStatus="Left";
             }
@@ -51,7 +52,7 @@ class Shape{
                 collisionStatus="Right";
             }
 
-            if(row!==(dataMange.rows-1)&&dataMange.dynamicMap[(row+1)*dataMange.cols+col]==1){
+            if(method=="Down"&&row!==(dataMange.rows-1)&&dataMange.dynamicMap[(row+1)*dataMange.cols+col]==1){
                 collisionStatus="Down";
             }
         }
@@ -82,11 +83,15 @@ class Shape{
     }
 
     moveLeft(){
-        this.x-=GAME_CONFIG.unitSize;
+        if(!this.leftStop){
+            this.x-=GAME_CONFIG.unitSize;
+        }
     }
 
     moveRight(){
-        this.x+=GAME_CONFIG.unitSize;
+        if(!this.rightStop){
+            this.x+=GAME_CONFIG.unitSize;
+        }
     }
 
     moveUp(){
@@ -94,7 +99,23 @@ class Shape{
         this.deg%=360;
     }
     
-    update(method){
+    collisionHandle(method){
+        let collisionStatus=this.collision(method);
+        this.leftStop=false;
+        this.rightStop=false;
+        if(collisionStatus=="Down"){
+            this.downStop=true;
+            this.stop();
+        }
+        if(collisionStatus=="Left"){
+            this.leftStop=true;
+        }
+        if(collisionStatus=="Right"){
+            this.rightStop=true;
+        }
+    }
+
+    updateHandle(method){
         let opdir='move'+method;
         this[opdir]();
         let boundaryState=this.boundary();
@@ -105,24 +126,17 @@ class Shape{
         }else if(boundaryState=="maxL"){
             this.x=GAME_CONFIG.ctxWidth-this.w;
         }
-
-        this.reComputed();
-        let collisionStatus=this.collision(method);
-        if(collisionStatus=="Down"){
-            this.downStop=true;
-            this.stop();
-        }
-        if(collisionStatus=="Left"){
-            this.moveRight();
-        }
-        if(collisionStatus=="Right"){
-            this.moveLeft();
-        }
+        
         this.reComputed();
     
         if(boundaryState=="maxH"){
             this.stop();
         }
+    }
+
+    update(method){
+        this.collisionHandle(method);
+        this.updateHandle(method);
     }
 
     reComputed(){
@@ -134,10 +148,8 @@ class Shape{
     }
 
     stop(){
-        setTimeout(() => {
-            dataMange.updateDynamicMap(this);
-            this.status='end';
-        },200);
+        dataMange.updateDynamicMap(this);
+        this.status='end';
     }
 
     draw(ctx){
