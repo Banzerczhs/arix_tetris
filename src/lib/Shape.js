@@ -77,6 +77,7 @@ class Shape{
     }
 
     moveDown(){
+        console.log(this.downStop,this.name);
         if(!this.downStop){
             this.y+=GAME_CONFIG.unitSize;
         }
@@ -148,8 +149,11 @@ class Shape{
     }
 
     stop(){
-        dataMange.updateDynamicMap(this);
-        this.status='end';
+        setTimeout(() => {
+            console.log(this);
+            dataMange.updateDynamicMap(this);
+            this.status='end';
+        },200);
     }
 
     draw(ctx){

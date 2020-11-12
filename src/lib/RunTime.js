@@ -58,25 +58,27 @@ class Runtime{
     removeLine(result){
         let throhs=[...result];
         dataMange.shapeList.forEach(shape=>{
-            shape.squareList=shape.squareList.filter(square=>{
-                if(!throhs.includes(square.y)){
-                    return true;
-                }else{
-                    let row=square.y/GAME_CONFIG.unitSize;
-                    let col=square.x/GAME_CONFIG.unitSize;
-                    dataMange.dynamicMap[row*dataMange.cols+col]=0;
-                }
-            });
-            let reference=throhs.slice(-1)[0];
-            if(shape.y<reference){
-                shape.y+=(GAME_CONFIG.unitSize*throhs.length);
-                shape.squareList.forEach(square=>{
-                    let row=square.y/GAME_CONFIG.unitSize;
-                    let col=square.x/GAME_CONFIG.unitSize;
-                    dataMange.dynamicMap[row*dataMange.cols+col]=0;
-                    square.y+=(GAME_CONFIG.unitSize*throhs.length);
+            if(shape.status=="end"){
+                shape.squareList=shape.squareList.filter(square=>{
+                    if(!throhs.includes(square.y)){
+                        return true;
+                    }else{
+                        let row=square.y/GAME_CONFIG.unitSize;
+                        let col=square.x/GAME_CONFIG.unitSize;
+                        dataMange.dynamicMap[row*dataMange.cols+col]=0;
+                    }
                 });
-                dataMange.updateDynamicMap(shape);
+                let reference=throhs.slice(-1)[0];
+                if(shape.y<reference){
+                    shape.y+=(GAME_CONFIG.unitSize*throhs.length);
+                    shape.squareList.forEach(square=>{
+                        let row=square.y/GAME_CONFIG.unitSize;
+                        let col=square.x/GAME_CONFIG.unitSize;
+                        dataMange.dynamicMap[row*dataMange.cols+col]=0;
+                        square.y+=(GAME_CONFIG.unitSize*throhs.length);
+                    });
+                    dataMange.updateDynamicMap(shape);
+                }
             }
         });
     }
