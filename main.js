@@ -1,3 +1,4 @@
+// require('./src/app');
 const {app,BrowserWindow} = require('electron');
 const GAME_CONFIG=require('./src/config/config');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
@@ -5,7 +6,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow() {
     let win = new BrowserWindow({
         resizable: false,
-        width: GAME_CONFIG.winWidth,
+        width: GAME_CONFIG.winWidth, 
         height: GAME_CONFIG.winHeight,
         show : false,
         webPreferences: {
@@ -24,7 +25,9 @@ function createWindow() {
     });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(function(){
+    createWindow();
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

@@ -1,5 +1,5 @@
 const ShapeMange=require("./ShapeMange");
-const DataMange=require('../lib/DataMange');
+const DataMange=require('./DataMange');
 const GAME_CONFIG=require('../config/config');
 
 const shapeMange=new ShapeMange();
@@ -7,17 +7,17 @@ const dataMange=new DataMange();
 
 //游戏运行类
 class Runtime{
-    constructor(){
-        this.init();       //游戏初始化
-    }
-    init(){
-        // this.bindEvent();     //绑定事件
+    init(ctx,canvas){
+        this.ctx=ctx;
+        this.canvas=canvas;
+        dataMange.init(ctx,canvas);
+        this.bindEvent();     //绑定事件
         this.run();
     }
     run(){
         let _this=this;
         setInterval(function(){
-            _this.update();
+            _this.update('Down');
             _this.render();
         },1000);
     }
@@ -26,15 +26,32 @@ class Runtime{
             shape.draw(this.ctx);
         });
     }
-    update(){
+    update(method){
+        if(!dataMange.shapeList.length
+            ||shapeMange.currentShape.status=="end"){
+            shapeMange.generate();
+        }
+        this.watchLine();
         this.ctx.clearRect(0,0,GAME_CONFIG.ctxWidth,GAME_CONFIG.winHeight);
-        shapeMange.generate();     //每过一秒生成一个形状
-        dataMange.shapeList.forEach(shape=>{
-            shape.update({x : shape.x,y:shape.y+=GAME_CONFIG.unitSize,deg:0});
-        });
+        shapeMange.currentShape.update(method,shapeMange.currentShape);
+    }
+    watchLine(){
+        // let map={...dataMange.dynamicMap};
+        // for (const phase in map) {
+        //     if (map[phase].val==10){
+        //         console.log(phase,map[phase].shapes);
+        //     }
+        // }
     }
     bindEvent(){
-        
+        let _this=this;
+        window.onkeydown=function(ev){
+            if(ev.key.indexOf('Arrow')!=-1){
+                let dir=ev.key.split('Arrow').slice(-1)[0];
+                _this.update(dir);
+                _this.render();
+            }
+        }
     }
     setCtx(ctx){
         this.ctx=ctx;
